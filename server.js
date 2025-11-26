@@ -15,7 +15,21 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = SUPABASE_URL && SUPABASE_KEY ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 const PG_URL = process.env.SUPABASE_PG_URL || process.env.DATABASE_URL;
-const pgPool = PG_URL ? new Pool({ connectionString: PG_URL, ssl: { rejectUnauthorized: false } }) : null;
+let pgPool = null;
+if (PG_URL) {
+    pgPool = new Pool({ connectionString: PG_URL, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 8000 });
+    console.log('✅ Postgres habilitado via URL');
+} else {
+    const PG_HOST = process.env.PGHOST || process.env.SUPABASE_PG_HOST;
+    const PG_PORT = parseInt(process.env.PGPORT || process.env.SUPABASE_PG_PORT || '5432', 10);
+    const PG_DATABASE = process.env.PGDATABASE || process.env.SUPABASE_PG_DATABASE || 'postgres';
+    const PG_USER = process.env.PGUSER || process.env.SUPABASE_PG_USER || 'postgres';
+    const PG_PASSWORD = process.env.PGPASSWORD || process.env.SUPABASE_PG_PASSWORD;
+    if (PG_HOST && PG_PASSWORD) {
+        pgPool = new Pool({ host: PG_HOST, port: PG_PORT, database: PG_DATABASE, user: PG_USER, password: PG_PASSWORD, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 8000 });
+        console.log(`✅ Postgres habilitado por parâmetros (${PG_HOST}:${PG_PORT})`);
+    }
+}
 
 // Middleware
 app.use(cors());
