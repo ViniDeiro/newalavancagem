@@ -1,0 +1,26 @@
+{
+  "name": "dashboard-alavancagem",
+  "version": "1.0.0",
+  "description": "Dashboard de Alavancagem de Apostas Esportivas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "body-parser": "^1.20.2",
+    "@supabase/supabase-js": "^2.47.6",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["apostas", "alavancagem", "dashboard", "8bit"],
+  "author": "Dashboard Creator",
+  "license": "MIT"
+}

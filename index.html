@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Alavancagem - 8-bit Style</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Login/Cadastro -->
+        <div class="auth-screen" id="authScreen">
+            <div class="auth-container">
+                <header class="header">
+                    <h1 class="title">🎮 DASHBOARD DE ALAVANCAGEM 🎮</h1>
+                </header>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="showLogin()">LOGIN</button>
+                    <button class="auth-tab" onclick="showRegister()">CADASTRO</button>
+                </div>
+
+                <!-- Formulário de Login -->
+                <div class="auth-form" id="loginForm">
+                    <div class="form-title">FAZER LOGIN</div>
+                    <div class="input-group">
+                        <label for="loginName">Nome:</label>
+                        <input type="text" id="loginName" placeholder="Digite seu nome">
+                    </div>
+                    <div class="input-group">
+                        <label for="loginPassword">Senha:</label>
+                        <input type="password" id="loginPassword" placeholder="Digite sua senha">
+                    </div>
+                    <button class="auth-button" onclick="login()">ENTRAR</button>
+                </div>
+
+                <!-- Formulário de Cadastro -->
+                <div class="auth-form" id="registerForm" style="display: none;">
+                    <div class="form-title">CRIAR CONTA</div>
+                    <div class="input-group">
+                        <label for="registerName">Nome:</label>
+                        <input type="text" id="registerName" placeholder="Digite seu nome">
+                    </div>
+                    <div class="input-group">
+                        <label for="registerPassword">Senha:</label>
+                        <input type="password" id="registerPassword" placeholder="Digite sua senha">
+                    </div>
+                    <div class="input-group">
+                        <label for="registerAge">Idade:</label>
+                        <input type="number" id="registerAge" placeholder="Digite sua idade" min="18">
+                    </div>
+                    <div class="input-group">
+                        <label for="registerBankroll">Banca Inicial (R$):</label>
+                        <input type="number" id="registerBankroll" placeholder="Ex: 150.00" min="1" step="0.01">
+                    </div>
+                    <button class="auth-button" onclick="register()">CADASTRAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Principal -->
+        <div class="main-app" id="mainApp" style="display: none;">
+            <header class="header">
+                <div class="header-content">
+                    <h1 class="title">🎮 DASHBOARD DE ALAVANCAGEM 🎮</h1>
+                    <div class="user-info">
+                        <span class="welcome-text" id="welcomeText">Bem-vindo!</span>
+                        <span id="bankrollText" class="bankroll-display">Banca: R$ 0,00</span>
+                        <button class="logout-button" onclick="logout()">SAIR</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Total Geral -->
+            <div class="total-section">
+                <div class="total-box">
+                    <div class="total-label">TOTAL GERAL</div>
+                    <div class="total-value" id="totalValue">R$ 0,00</div>
+                </div>
+            </div>
+
+        <!-- Dashboard Principal -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-title">SUAS ALAVANCAGENS</div>
+            <div class="dashboard-grid" id="dashboardGrid">
+                <!-- Alavancagens ativas serão inseridas aqui dinamicamente -->
+            </div>
+
+            <button class="add-button" onclick="showAddLeverageModal()">+ NOVA ALAVANCAGEM</button>
+
+            <div class="completed-section" id="completedSection" style="display: none;">
+                <h3 class="section-title">🏆 ALAVANCAGENS CONCLUÍDAS</h3>
+                <div class="completed-grid" id="completedGrid">
+                    <!-- Alavancagens concluídas serão inseridas aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Detalhes da Alavancagem -->
+        <div class="detail-screen" id="detailScreen" style="display: none;">
+            <div class="detail-container">
+                <div class="detail-header">
+                    <button class="back-button" onclick="showDashboard()">← VOLTAR</button>
+                    <div class="leverage-name" id="leverageName">Alavancagem</div>
+                </div>
+                
+                <div class="detail-content">
+                    <div class="day-section">
+                        <div class="day-label">Aposta</div>
+                        <div class="day-value" id="currentDay">1</div>
+                    </div>
+                    
+                    <div class="value-section">
+                        <button class="nav-button up" onclick="nextDay()">▲</button>
+                        <div class="current-value" id="currentValue">R$ 0,00</div>
+                        <button class="nav-button down" onclick="previousDay()">▼</button>
+                    </div>
+                    
+                    <div class="projection-section">
+                        <div class="projection-item">
+                            <span class="projection-label">Próxima aposta:</span>
+                            <span class="projection-value" id="nextValue">R$ 0,00</span>
+                        </div>
+                        <div class="projection-item">
+                            <span class="projection-label">Valor final (60 apostas):</span>
+                            <span class="projection-value final" id="finalValue">R$ 0,00</span>
+                        </div>
+                        <div class="projection-item">
+                            <span class="projection-label">Lucro total:</span>
+                            <span class="projection-value profit" id="totalProfit">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-label">Progresso: <span id="progressText">1/60</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Adicionar Nova Alavancagem -->
+        <div class="modal" id="addModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>NOVA ALAVANCAGEM</h2>
+                    <button class="close-button" onclick="hideAddLeverageModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="leverageName">Nome da Alavancagem:</label>
+                        <input type="text" id="leverageNameInput" placeholder="Ex: Alavancagem 25R$">
+                    </div>
+                    <div class="input-group">
+                        <label for="initialValue">Valor Inicial (R$):</label>
+                        <input type="number" id="initialValueInput" placeholder="25" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label for="oddValue">Odd:</label>
+                        <input type="number" id="oddValueInput" value="1.1" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label for="maxBets">Número de Apostas:</label>
+                        <input type="number" id="maxBetsInput" value="60">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cancel-button" onclick="hideAddLeverageModal()">CANCELAR</button>
+                    <button class="create-button" onclick="createLeverage()">CRIAR</button>
+                </div>
+            </div>
+        </div>
+        </div> <!-- Fechando main-app -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
